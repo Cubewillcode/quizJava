@@ -1,14 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-//import java.awt.event.FocusAdapter;
-//import java.awt.event.FocusEvent;
-//import com.jgoodies.forms.factories.Paddings;
-//import com.jgoodies.forms.factories.PromptSupport;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class QuestionScreen extends JPanel {
     private JButton submitButton;
@@ -16,7 +15,6 @@ public class QuestionScreen extends JPanel {
     private JPanel cardPanel;
     private JTextArea questionText;
     private JTextField answerField;
-    private JTextField userAnswerText;
     private Map<String, String> questions;
     private String currentQuestion;
     private ArrayList<String> selectedQuestions; // Keep track of selected questions
@@ -27,12 +25,11 @@ public class QuestionScreen extends JPanel {
         this.cardPanel = cardPanel;
         this.setLayout(new GridBagLayout());
         this.setBackground(Color.decode("#003366"));
-        
+
         selectedQuestions = new ArrayList<>();
         points = 0;
         questionText = createStyledQuestionTextArea(); // Style for question
         answerField = createStyledAnswerTextField(); // Style for answer field
-        userAnswerText = createStyledAnswerTextField(); // Style for user answer
 
         // If statement to choose a type of questions
         if ("trivia".equals(questionType)) {
@@ -65,60 +62,71 @@ public class QuestionScreen extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        gbc.insets = new Insets(0, 0, 20, 0);
+        gbc.gridheight = 1;
+        gbc.insets = new Insets(5, 5, 5, 5);
         add(questionText, gbc);
 
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        add(answerField, gbc);
+        GridBagConstraints gbcQt = new GridBagConstraints();
+        gbcQt.gridx = 0;
+        gbcQt.gridy = 3;
+        gbcQt.gridwidth = 2;
+        gbcQt.gridheight = 1;
+        gbcQt.insets = new Insets(5, 5, 5, 5);
+        add(answerField, gbcQt);
 
-        gbc.gridy = 2;
-        add(buttonPanel, gbc);
+        GridBagConstraints gbcBp = new GridBagConstraints();
+        gbcBp.gridx = 0;
+        gbcBp.gridy = 5;
+        gbcBp.gridwidth = 2;
+        gbcBp.gridheight = 1;
+        gbcBp.insets = new Insets(5, 5, 5, 5);
+        add(buttonPanel, gbcBp);
     }
 
-        //Question field styles
-        private JTextArea createStyledQuestionTextArea() {
-        JTextArea textArea = new JTextArea();
-        textArea.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 30));
+    // Question field styles
+    private JTextArea createStyledQuestionTextArea() {
+        JTextArea textArea = new JTextArea(2, 30);  // Set rows and columns
+        textArea.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 28));
         textArea.setBorder(BorderFactory.createLineBorder(Color.decode("#003366")));
         textArea.setForeground(Color.WHITE);
-        textArea.setOpaque(true); // Ensure that the JTextArea is opaque
-        textArea.setBackground(Color.decode("#003366")); // Set background color for the question
-        textArea.setMargin(new Insets(10, 10, 10, 10)); // Add margin
+        textArea.setOpaque(true);
+        textArea.setBackground(Color.decode("#003366"));
+        textArea.setMargin(new Insets(10, 10, 10, 10));
+        textArea.setLineWrap(true);  // Enable line wrapping
+        textArea.setWrapStyleWord(true);
         return textArea;
-        }
-        //Answer field styles
-        private JTextField createStyledAnswerTextField() {
-        JTextField textField = new JTextField(" Type your answer here       ");
-        textField.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 30));
+    }
+
+    // Answer field styles
+    private JTextField createStyledAnswerTextField() {
+        JTextField textField = new JTextField(" Type your answer here.........");
+        textField.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 25));
         textField.setBorder(BorderFactory.createLineBorder(Color.decode("#669999")));
         textField.setForeground(Color.WHITE);
-        textField.setCaretColor(Color.WHITE); // Set caret color to white
+        textField.setCaretColor(Color.WHITE);
         textField.setOpaque(true);
         textField.setBackground(Color.DARK_GRAY);
         textField.setMargin(new Insets(10, 10, 10, 10));
-        
-        //PromptSupport.setPrompt(" Type your answer here..........", textField);
-
-        /*
-        //method to keep a placeholder text until the user clicks on answer field
-        textField.addFocusListener(new FocusAdapter() {
+    
+        // Add a mouse listener to handle placeholder text
+        textField.addMouseListener(new MouseAdapter() {
             @Override
-            public void focusGained(FocusEvent e) {
-                if (textField.getText().equals(" Type your answer here       ")) {
+            public void mouseClicked(MouseEvent e) {
+                if (textField.getText().equals(" Type your answer here.........")) {
                     textField.setText("");
                 }
             }
+        });
     
+        // Add a focus listener to restore placeholder text if the field is empty on focus lost
+        textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 if (textField.getText().isEmpty()) {
-                    textField.setText(" Type your answer here       ");
+                    textField.setText(" Type your answer here.........");
                 }
             }
         });
-        */
     
         return textField;
     }
@@ -135,8 +143,7 @@ public class QuestionScreen extends JPanel {
             currentQuestion = nextQuestion;
             questionText.setText(currentQuestion);
             questionText.setEditable(false);
-            userAnswerText.setText("");
-            userAnswerText.setEditable(false);
+            answerField.setText(" Type your answer here.........");
         } else if (selectedQuestions.size() == 10) {
             cardLayout.show(cardPanel, "FinalScoreScreen");
             ((FinalScoreScreen) cardPanel.getComponent(4)).updatePoints(getPoints());
@@ -150,11 +157,10 @@ public class QuestionScreen extends JPanel {
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim().toLowerCase(); // Convert to lowercase for case-insensitive comparison
         String correctAnswer = questions.get(currentQuestion).toLowerCase(); // Convert to lowercase for case-insensitive comparison
-    
-        userAnswerText.setText("Your Answer: " + userAnswer);
-    
+
+        // Split correct answer into individual words
         String[] correctWords = correctAnswer.split("\\s+");
-    
+
         // Check if at least one correct word is present in the user's answer
         boolean isCorrect = false;
         for (String word : correctWords) {
@@ -163,7 +169,7 @@ public class QuestionScreen extends JPanel {
                 break;
             }
         }
-    
+
         if (isCorrect) {
             // correct answer, move to the next question
             points++;
