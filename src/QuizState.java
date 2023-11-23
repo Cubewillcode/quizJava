@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Question {
+public class QuizState {
     
     private Map<String, String> questionTrivia;
     private Map<String, String> questionRiddles;
     private int points;
     private int questionCounter;
 
-    public Question() {
+    public QuizState() {
         questionTrivia = new HashMap<>();
         questionRiddles = new HashMap<>();
         initializeQuestions();

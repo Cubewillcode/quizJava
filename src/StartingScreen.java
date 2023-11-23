@@ -7,11 +7,11 @@ public class StartingScreen extends JPanel {
     private JButton startButton;
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private Question questionManager;
+    private QuizState questionManager;
     private QuestionScreen triviaScreen;
     private QuestionScreen riddlesScreen;
 
-    public StartingScreen(CardLayout cardLayout, JPanel cardPanel, Question questionManager,
+    public StartingScreen(CardLayout cardLayout, JPanel cardPanel, QuizState questionManager,
                           QuestionScreen triviaScreen, QuestionScreen riddlesScreen) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;

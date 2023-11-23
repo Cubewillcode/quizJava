@@ -4,7 +4,7 @@ import java.awt.*;
 public class Main extends JFrame {
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private Question questionManager;
+    private QuizState questionManager;
     private QuestionScreen triviaScreen; // declare triviaScreen
     private QuestionScreen riddlesScreen; // declare riddlesScreen
 
@@ -19,7 +19,7 @@ public class Main extends JFrame {
         cardPanel = new JPanel(cardLayout);
 
         // Assigns the class that manages the quiz state to this component
-        questionManager = new Question();
+        questionManager = new QuizState();
 
         // Create instances of triviaScreen and riddlesScreen here
         triviaScreen = new QuestionScreen(cardLayout, cardPanel, questionManager, "trivia");

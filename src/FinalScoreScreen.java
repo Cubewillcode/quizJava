@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 
 public class FinalScoreScreen extends JPanel {
     private JButton finishButton;
-    private Question questionManager;
+    private QuizState questionManager;
 
-    public FinalScoreScreen(CardLayout cardLayout, JPanel cardPanel, Question questionManager) {
+    public FinalScoreScreen(CardLayout cardLayout, JPanel cardPanel, QuizState questionManager) {
         this.questionManager = questionManager;
 
         setLayout(new GridBagLayout());

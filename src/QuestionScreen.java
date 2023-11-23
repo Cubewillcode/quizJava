@@ -18,7 +18,7 @@ public class QuestionScreen extends JPanel {
     private JLabel feedbackLabel; // New JLabel for feedback
     private JLabel pointsLabel; // New JLabel for points display
     
-    public QuestionScreen(CardLayout cardLayout, JPanel cardPanel, Question questionManager, String questionType) {
+    public QuestionScreen(CardLayout cardLayout, JPanel cardPanel, QuizState questionManager, String questionType) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.setLayout(new GridBagLayout());
