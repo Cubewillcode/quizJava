@@ -17,6 +17,7 @@ public class QuestionScreen extends JPanel {
     private int points; // Counter for correct answers
     private JLabel feedbackLabel; // New JLabel for feedback
     private JLabel pointsLabel; // New JLabel for points display
+    private Timer feedbackTimer; // Timer for clearing the feedback label after a certain time
 
     public QuestionScreen(CardLayout cardLayout, JPanel cardPanel, Question questionManager, String questionType) {
         this.cardLayout = cardLayout;
@@ -41,6 +42,15 @@ public class QuestionScreen extends JPanel {
         pointsLabel.setForeground(Color.ORANGE);
         pointsLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        //Method to clear the feedback label after some time
+        feedbackTimer = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                feedbackLabel.setText("");
+            }
+        });
+        feedbackTimer.setRepeats(false);// Only fire once
+
         // If statement to choose a type of questions
         if ("trivia".equals(questionType)) {
             questions = questionManager.getTriviaQuestions();
@@ -53,11 +63,11 @@ public class QuestionScreen extends JPanel {
         // initialize the first question
         showNextQuestion();
 
-        // Panel for the submit button
+        //Panel for the submit button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(Color.decode("#003366"));
 
-        // Create StyledButton and check the answer
+        //Create submit button and check the answer
         submitButton = new StyledButton(" Submit ", "start", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent x) {
@@ -67,7 +77,9 @@ public class QuestionScreen extends JPanel {
 
         buttonPanel.add(submitButton);
 
-        // managing layout of the components
+        //Managing layout of the components
+
+        //Question
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -75,7 +87,7 @@ public class QuestionScreen extends JPanel {
         gbc.gridheight = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
         add(questionText, gbc);
-
+        //Answer
         GridBagConstraints gbcQt = new GridBagConstraints();
         gbcQt.gridx = 0;
         gbcQt.gridy = 3;
@@ -83,7 +95,7 @@ public class QuestionScreen extends JPanel {
         gbcQt.gridheight = 1;
         gbcQt.insets = new Insets(5, 5, 5, 5);
         add(answerField, gbcQt);
-
+        //Feedback
         GridBagConstraints gbcFeedback = new GridBagConstraints();
         gbcFeedback.gridx = 0;
         gbcFeedback.gridy = 6;
@@ -91,7 +103,7 @@ public class QuestionScreen extends JPanel {
         gbcFeedback.gridheight = 1;
         gbcFeedback.insets = new Insets(5, 5, 5, 5);
         add(feedbackLabel, gbcFeedback);
-
+        //Panel for submit button
         GridBagConstraints gbcBp = new GridBagConstraints();
         gbcBp.gridx = 0;
         gbcBp.gridy = 5;
@@ -99,7 +111,7 @@ public class QuestionScreen extends JPanel {
         gbcBp.gridheight = 1;
         gbcBp.insets = new Insets(5, 5, 5, 5);
         add(buttonPanel, gbcBp);
-
+        //Points label
         GridBagConstraints gbcPoints = new GridBagConstraints();
         gbcPoints.gridx = 5;
         gbcPoints.gridy = 6;
@@ -109,7 +121,7 @@ public class QuestionScreen extends JPanel {
         add(pointsLabel, gbcPoints);
     }
 
-    // Question field styles
+    //Question field styles
     private JTextArea createStyledQuestionTextArea() {
         JTextArea textArea = new JTextArea(2, 30);  // Set rows and columns
         textArea.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 28));
@@ -123,7 +135,7 @@ public class QuestionScreen extends JPanel {
         return textArea;
     }
 
-    // Answer field styles
+    //Answer field styles
     private JTextField createStyledAnswerTextField() {
         JTextField textField = new JTextField(" Type your answer here.........");
         textField.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 25));
@@ -134,7 +146,7 @@ public class QuestionScreen extends JPanel {
         textField.setBackground(Color.DARK_GRAY);
         textField.setMargin(new Insets(10, 10, 10, 10));
     
-        // Add a mouse listener to handle placeholder text
+        //Add a mouse listener to handle placeholder text
         textField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -144,7 +156,7 @@ public class QuestionScreen extends JPanel {
             }
         });
     
-        // Add a focus listener to restore placeholder text if the field is empty on focus lost
+        //Add a focus listener to restore placeholder text if the field is empty on focus lost
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -157,6 +169,7 @@ public class QuestionScreen extends JPanel {
         return textField;
     }
 
+    //Chooses a question to display and rotates through them
     private void showNextQuestion() {
         if (selectedQuestions.size() < 10 && !questions.isEmpty()) {
             // Choose a random question
@@ -165,30 +178,36 @@ public class QuestionScreen extends JPanel {
             String nextQuestion = remainingQuestions.get(0);
 
             selectedQuestions.add(nextQuestion);
-
             currentQuestion = nextQuestion;
             questionText.setText(currentQuestion);
             questionText.setEditable(false);
             answerField.setText(" Type your answer here.........");
+            feedbackLabel.setText("");
+            feedbackTimer.restart();
+
         } else if (selectedQuestions.size() == 10) {
+            //go to the final score
             cardLayout.show(cardPanel, "FinalScoreScreen");
             ((FinalScoreScreen) cardPanel.getComponent(4)).updatePoints(getPoints());
+        
         } else {
-            // go to the final score
+            //go to the final score
             cardLayout.show(cardPanel, "FinalScoreScreen");
             ((FinalScoreScreen) cardPanel.getComponent(4)).updatePoints(getPoints());
         }
+        //Updates the label displaying points
         pointsLabel.setText(points + "/10");
     }
 
+    //Method for checking if the answer is correct or not and adding points
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim().toLowerCase(); // Convert to lowercase for case-insensitive comparison
         String correctAnswer = questions.get(currentQuestion).toLowerCase(); // Convert to lowercase for case-insensitive comparison
 
-        // Split correct answer into individual words
+        //Split correct answer into individual words
         String[] correctWords = correctAnswer.split("\\s+");
 
-        // Check if at least one correct word is present in the user's answer
+        //Check if at least one correct word is present in the user's answer
         boolean isCorrect = false;
         for (String word : correctWords) {
             if (userAnswer.contains(word)) {
@@ -198,12 +217,13 @@ public class QuestionScreen extends JPanel {
         }
 
         if (isCorrect) {
-            // correct answer, move to the next question
+            //correct answer, move to the next question and update the feedback label
             points++;
             questions.remove(currentQuestion);
             showNextQuestion();
             feedbackLabel.setText("Correct!");
         } else {
+            //incorrect answer, move to the next question and update the feedback label
             questions.remove(currentQuestion);
             showNextQuestion();
             feedbackLabel.setText("Incorrect. The correct answer was: " + correctAnswer);
