@@ -8,12 +8,21 @@ public class Question {
     
     private Map<String, String> questionTrivia;
     private Map<String, String> questionRiddles;
+    private int points;
+    private int questionCounter;
 
     public Question() {
         questionTrivia = new HashMap<>();
         questionRiddles = new HashMap<>();
-
         initializeQuestions();
+        reset();
+    }
+
+    public void reset() {
+        // Reload questions from the files
+        initializeQuestions();
+        points = 0;
+        questionCounter = 0;
     }
 
     private void initializeQuestions() {
@@ -34,6 +43,16 @@ public class Question {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Getter for points
+    public int getPoints() {
+        return points;
+    }
+
+    // Getter for question counter
+    public int getQuestionCounter() {
+        return questionCounter;
     }
 
     public Map<String, String> getTriviaQuestions() {

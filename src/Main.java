@@ -23,7 +23,7 @@ public class Main extends JFrame {
         ChooseTypeScreen chooseTypeScreen = new ChooseTypeScreen(cardLayout, cardPanel);
         QuestionScreen triviaScreen = new QuestionScreen(cardLayout, cardPanel, questionManager, "trivia");
         QuestionScreen riddlesScreen = new QuestionScreen(cardLayout, cardPanel, questionManager, "riddles");
-        FinalScoreScreen finalScoreScreen = new FinalScoreScreen(cardLayout, cardPanel, questionManager, 0);
+        FinalScoreScreen finalScoreScreen = new FinalScoreScreen(cardLayout, cardPanel, questionManager);
 
         cardPanel.add(startingScreen, "StartingScreen");
         cardPanel.add(chooseTypeScreen, "ChooseTypeScreen");

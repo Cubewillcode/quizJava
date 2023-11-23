@@ -1,24 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class QuestionScreen extends JPanel {
     private JButton submitButton;
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private JTextArea questionText;
-    private JTextField answerField;
-    private Map<String, String> questions;
+    private JTextField answerField; //Displays a field for users answer
+    private Map<String, String> questions; //Grabs the questions from txt file in question : answer form
     private String currentQuestion;
     private ArrayList<String> selectedQuestions; // Keep track of selected questions
     private int points; // Counter for correct answers
+    private JLabel feedbackLabel; // New JLabel for feedback
+    private JLabel pointsLabel; // New JLabel for points display
 
     public QuestionScreen(CardLayout cardLayout, JPanel cardPanel, Question questionManager, String questionType) {
         this.cardLayout = cardLayout;
@@ -30,6 +28,18 @@ public class QuestionScreen extends JPanel {
         points = 0;
         questionText = createStyledQuestionTextArea(); // Style for question
         answerField = createStyledAnswerTextField(); // Style for answer field
+
+        // Initialize the feedback label
+        feedbackLabel = new JLabel();
+        feedbackLabel.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 20));
+        feedbackLabel.setForeground(Color.ORANGE);
+        feedbackLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        // Initialize the points label
+        pointsLabel = new JLabel("0/10");
+        pointsLabel.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 30));
+        pointsLabel.setForeground(Color.ORANGE);
+        pointsLabel.setHorizontalAlignment(JLabel.CENTER);
 
         // If statement to choose a type of questions
         if ("trivia".equals(questionType)) {
@@ -74,6 +84,14 @@ public class QuestionScreen extends JPanel {
         gbcQt.insets = new Insets(5, 5, 5, 5);
         add(answerField, gbcQt);
 
+        GridBagConstraints gbcFeedback = new GridBagConstraints();
+        gbcFeedback.gridx = 0;
+        gbcFeedback.gridy = 6;
+        gbcFeedback.gridwidth = 2;
+        gbcFeedback.gridheight = 1;
+        gbcFeedback.insets = new Insets(5, 5, 5, 5);
+        add(feedbackLabel, gbcFeedback);
+
         GridBagConstraints gbcBp = new GridBagConstraints();
         gbcBp.gridx = 0;
         gbcBp.gridy = 5;
@@ -81,6 +99,14 @@ public class QuestionScreen extends JPanel {
         gbcBp.gridheight = 1;
         gbcBp.insets = new Insets(5, 5, 5, 5);
         add(buttonPanel, gbcBp);
+
+        GridBagConstraints gbcPoints = new GridBagConstraints();
+        gbcPoints.gridx = 5;
+        gbcPoints.gridy = 6;
+        gbcPoints.gridwidth = 2;
+        gbcPoints.gridheight = 1;
+        gbcPoints.insets = new Insets(5, 5, 5, 5);
+        add(pointsLabel, gbcPoints);
     }
 
     // Question field styles
@@ -152,6 +178,7 @@ public class QuestionScreen extends JPanel {
             cardLayout.show(cardPanel, "FinalScoreScreen");
             ((FinalScoreScreen) cardPanel.getComponent(4)).updatePoints(getPoints());
         }
+        pointsLabel.setText(points + "/10");
     }
 
     private void checkAnswer() {
@@ -175,11 +202,11 @@ public class QuestionScreen extends JPanel {
             points++;
             questions.remove(currentQuestion);
             showNextQuestion();
-            JOptionPane.showMessageDialog(this, "Correct!");
+            feedbackLabel.setText("Correct!");
         } else {
             questions.remove(currentQuestion);
             showNextQuestion();
-            JOptionPane.showMessageDialog(this, "Incorrect. The correct answer is: " + correctAnswer);
+            feedbackLabel.setText("Incorrect. The correct answer was: " + correctAnswer);
         }
     }
 
