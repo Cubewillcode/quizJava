@@ -17,8 +17,7 @@ public class QuestionScreen extends JPanel {
     private int points; // Counter for correct answers
     private JLabel feedbackLabel; // New JLabel for feedback
     private JLabel pointsLabel; // New JLabel for points display
-    private Timer feedbackTimer; // Timer for clearing the feedback label after a certain time
-
+    
     public QuestionScreen(CardLayout cardLayout, JPanel cardPanel, Question questionManager, String questionType) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
@@ -41,15 +40,6 @@ public class QuestionScreen extends JPanel {
         pointsLabel.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 30));
         pointsLabel.setForeground(Color.ORANGE);
         pointsLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        //Method to clear the feedback label after some time
-        feedbackTimer = new Timer(2000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                feedbackLabel.setText("");
-            }
-        });
-        feedbackTimer.setRepeats(false);// Only fire once
 
         // If statement to choose a type of questions
         if ("trivia".equals(questionType)) {
@@ -139,30 +129,34 @@ public class QuestionScreen extends JPanel {
     private JTextField createStyledAnswerTextField() {
         JTextField textField = new JTextField(" Type your answer here.........");
         textField.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 25));
-        textField.setBorder(BorderFactory.createLineBorder(Color.decode("#669999")));
+        textField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.DARK_GRAY),
+                BorderFactory.createMatteBorder(3, 3, 4, 4, Color.DARK_GRAY)
+        ));
         textField.setForeground(Color.WHITE);
         textField.setCaretColor(Color.WHITE);
         textField.setOpaque(true);
-        textField.setBackground(Color.DARK_GRAY);
+        textField.setBackground(Color.decode("#003366"));
         textField.setMargin(new Insets(10, 10, 10, 10));
     
-        //Add a mouse listener to handle placeholder text
-        textField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (textField.getText().equals(" Type your answer here.........")) {
-                    textField.setText("");
-                }
-            }
-        });
-    
-        //Add a focus listener to restore placeholder text if the field is empty on focus lost
+        // Add a focus listener to handle placeholder text
         textField.addFocusListener(new FocusAdapter() {
             @Override
+            public void focusGained(FocusEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    if (textField.getText().equals(" Type your answer here.........")) {
+                        textField.setText("");
+                    }
+                });
+            }
+    
+            @Override
             public void focusLost(FocusEvent e) {
-                if (textField.getText().isEmpty()) {
-                    textField.setText(" Type your answer here.........");
-                }
+                SwingUtilities.invokeLater(() -> {
+                    if (textField.getText().isEmpty()) {
+                        textField.setText(" Type your answer here.........");
+                    }
+                });
             }
         });
     
@@ -183,7 +177,6 @@ public class QuestionScreen extends JPanel {
             questionText.setEditable(false);
             answerField.setText(" Type your answer here.........");
             feedbackLabel.setText("");
-            feedbackTimer.restart();
 
         } else if (selectedQuestions.size() == 10) {
             //go to the final score
@@ -232,5 +225,17 @@ public class QuestionScreen extends JPanel {
 
     public int getPoints() {
         return points;
+    }
+
+    public void reset() {
+        selectedQuestions.clear();
+        points = 0;
+        updatePointsLabel();
+        showNextQuestion();
+        feedbackLabel.setText("");
+    }
+
+    private void updatePointsLabel() {
+        pointsLabel.setText(points + "/10");
     }
 }

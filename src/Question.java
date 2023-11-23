@@ -15,7 +15,7 @@ public class Question {
         questionTrivia = new HashMap<>();
         questionRiddles = new HashMap<>();
         initializeQuestions();
-        reset();
+        //reset();
     }
 
     public void reset() {

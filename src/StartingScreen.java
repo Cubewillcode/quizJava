@@ -5,10 +5,21 @@ import java.awt.event.ActionListener;
 
 public class StartingScreen extends JPanel {
     private JButton startButton;
-    
-    public StartingScreen(CardLayout cardLayout, JPanel cardPanel) {
-        this.setBackground(Color.decode("#003366"));
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
+    private Question questionManager;
+    private QuestionScreen triviaScreen;
+    private QuestionScreen riddlesScreen;
 
+    public StartingScreen(CardLayout cardLayout, JPanel cardPanel, Question questionManager,
+                          QuestionScreen triviaScreen, QuestionScreen riddlesScreen) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+        this.questionManager = questionManager;
+        this.triviaScreen = triviaScreen;
+        this.riddlesScreen = riddlesScreen;
+
+        setBackground(Color.decode("#003366"));
         setLayout(new BorderLayout());
 
         // Title Label
@@ -30,15 +41,24 @@ public class StartingScreen extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(Color.decode("#003366"));
 
-        // Create StyledButton
+        // Create StyledButton and start quiz
         startButton = new StyledButton(" Start Quiz ", "start", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Reset quiz state and move to the question screen
+                resetQuizState();
                 cardLayout.show(cardPanel, "ChooseTypeScreen");
             }
         });
 
         buttonPanel.add(startButton);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    // Reset quiz state
+    private void resetQuizState() {
+        questionManager.reset();
+        triviaScreen.reset();
+        riddlesScreen.reset();
     }
 }
