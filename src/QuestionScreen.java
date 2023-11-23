@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.io.File;
+import javax.sound.sampled.*;
 
 public class QuestionScreen extends JPanel {
     private JButton submitButton;
@@ -17,6 +19,8 @@ public class QuestionScreen extends JPanel {
     private int points; // Counter for correct answers
     private JLabel feedbackLabel; // New JLabel for feedback
     private JLabel pointsLabel; // New JLabel for points display
+    private Clip correctSound;
+    private Clip incorrectSound;
     
     public QuestionScreen(CardLayout cardLayout, JPanel cardPanel, QuizState questionManager, String questionType) {
         this.cardLayout = cardLayout;
@@ -28,6 +32,7 @@ public class QuestionScreen extends JPanel {
         points = 0;
         questionText = createStyledQuestionTextArea(); // Style for question
         answerField = createStyledAnswerTextField(); // Style for answer field
+        loadSounds();
 
         // Initialize the feedback label
         feedbackLabel = new JLabel();
@@ -109,6 +114,39 @@ public class QuestionScreen extends JPanel {
         gbcPoints.gridheight = 1;
         gbcPoints.insets = new Insets(5, 5, 5, 5);
         add(pointsLabel, gbcPoints);
+    }
+
+    private void loadSounds() {
+        try {
+            correctSound = AudioSystem.getClip();
+            AudioInputStream correctStream = AudioSystem.getAudioInputStream(
+                    new File("sound/correct.wav"));
+            correctSound.open(correctStream);
+
+            incorrectSound = AudioSystem.getClip();
+            AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(
+                    new File("sound/incorrect.wav"));
+            incorrectSound.open(incorrectStream);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void playCorrectSound() {
+        if (correctSound.isRunning()) {
+            correctSound.stop();
+        }
+        correctSound.setFramePosition(0);
+        correctSound.start();
+    }
+
+    private void playIncorrectSound() {
+        if (incorrectSound.isRunning()) {
+            incorrectSound.stop();
+        }
+        incorrectSound.setFramePosition(0);
+        incorrectSound.start();
     }
 
     //Question field styles
@@ -215,11 +253,13 @@ public class QuestionScreen extends JPanel {
             questions.remove(currentQuestion);
             showNextQuestion();
             feedbackLabel.setText("Correct!");
+            playCorrectSound();
         } else {
             //incorrect answer, move to the next question and update the feedback label
             questions.remove(currentQuestion);
             showNextQuestion();
             feedbackLabel.setText("Incorrect. The correct answer was: " + correctAnswer);
+            playIncorrectSound();
         }
     }
 

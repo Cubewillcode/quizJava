@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import javax.sound.sampled.*;
 
 public class Main extends JFrame {
     private CardLayout cardLayout;
@@ -7,14 +9,16 @@ public class Main extends JFrame {
     private QuizState questionManager;
     private QuestionScreen triviaScreen; // declare triviaScreen
     private QuestionScreen riddlesScreen; // declare riddlesScreen
-
+    private Clip backgroundMusic;
+    
     public Main() {
         // Style of the main window
         setTitle("Pub Quiz Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1300, 700);
         setLocationRelativeTo(null);
-
+        loadBackgroundMusic();
+        
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
@@ -41,6 +45,19 @@ public class Main extends JFrame {
 
         // Chooses the first card to show at the start of the game
         cardLayout.show(cardPanel, "StartingScreen");
+    }
+
+    private void loadBackgroundMusic() {
+        try {
+            backgroundMusic = AudioSystem.getClip();
+            AudioInputStream musicStream = AudioSystem.getAudioInputStream(
+                    new File("sound/shadydave_snowfall-final.wav"));
+            backgroundMusic.open(musicStream);
+            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Initializing the pop up of the whole GUI screen

@@ -53,6 +53,19 @@ public class StartingScreen extends JPanel {
 
         buttonPanel.add(startButton);
         add(buttonPanel, BorderLayout.SOUTH);
+
+        // Credits Label
+        JLabel creditsLabel = new JLabel("<HTML>Background Music:<br>\"Snowfall-Final\" by ShadyDave<br>https://creativecommons.org/licenses/by-nc/4.0/</html>");
+        creditsLabel.setFont(new Font("Berlin Sans FB Demi", Font.PLAIN, 12));
+        creditsLabel.setForeground(Color.CYAN);
+        creditsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        creditsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Container for creditsLabel
+        JPanel creditsPanel = new JPanel(new BorderLayout());
+        creditsPanel.setBackground(Color.decode("#003366"));
+        creditsPanel.add(creditsLabel, BorderLayout.EAST);
+        add(creditsLabel, BorderLayout.EAST);
     }
 
     // Reset quiz state
