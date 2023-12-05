@@ -7,7 +7,7 @@ What can you break, even if you never pick it up or touch it? : promise
 What goes up but never comes down? : age
 What can you keep after giving to someone? : word promise
 A little girl goes to the store and buys one dozen eggs. As she is going home, all but three break. How many eggs are left unbroken? : three 3
-If there are three apples and you take away two, how many apples do you have? : two
+If there are three apples and you take away two, how many apples do you have? : two 2
 What begins with an "e" and only contains one letter? : envelope
 What is so fragile that saying its name breaks it? : silence
 If you drop me I’m sure to crack, but give me a smile and I’ll always smile back. What am I? : mirror
@@ -25,6 +25,6 @@ What invention lets you look right through a wall? : window
 What has many keys but can’t open a single lock? : piano music
 I follow you all the time and copy your every move, but you can’t touch me or catch me. What am I? : shadow
 David’s parents have three sons: Snap, Crackle, and what’s the name of the third son? : David
-Which month has 29 days? : all
+Which month has 29 days? : all every
 You walk into a room that contains a match, a kerosene lamp, a candle and a fireplace. What would you light first? : match
 A man who was outside in the rain without an umbrella or hat didn’t get a single hair on his head wet. Why? : bald

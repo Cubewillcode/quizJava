@@ -46,7 +46,7 @@ public class Main extends JFrame {
         // Chooses the first card to show at the start of the game
         cardLayout.show(cardPanel, "StartingScreen");
     }
-
+    
     private void loadBackgroundMusic() {
         try {
             backgroundMusic = AudioSystem.getClip();
@@ -59,7 +59,7 @@ public class Main extends JFrame {
             e.printStackTrace();
         }
     }
-
+    
     // Initializing the pop up of the whole GUI screen
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
